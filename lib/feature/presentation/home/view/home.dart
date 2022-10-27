@@ -1,56 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:news_app/feature/presentation/home/widgets/tab_news.dart';
+import 'package:news_app/feature/presentation/markers/view/marker_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int selectedPage = 0;
+  final List _pages = [
+    const TabNews(),
+    const MarkerPage(),
+  ];
+  void _onTapSelectedPage(int index) {
+    setState(() {
+      if (selectedPage == index) {
+        return;
+      }
+      selectedPage = index;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: const Text("News Application"),
-          bottom: const TabBar(
-            tabs: [
-              Tab(
-                icon: Icon(Icons.list_alt_rounded),
-              ),
-              Tab(
-                icon: Icon(Icons.table_rows_rounded),
-              ),
-            ],
+    return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.list_alt_rounded,
+              color: selectedPage == 0 ? Colors.blue : Colors.grey,
+            ),
+            label: '',
           ),
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.list_alt_rounded,
-              ),
-              label: 'Новости',
-              tooltip: "News"
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.bookmark_border_rounded,
+              color: selectedPage == 1 ? Colors.blue : Colors.grey,
             ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.bookmark_border_rounded,
-              ),
-              label: 'Закладки',
-              tooltip: "Marker"
-            ),
-          ],
-        ),
-        body: const Center(
-          child: Text(
-            'Lucky Punch!',
-            style: TextStyle(
-              fontSize: 30,
-              color: Colors.black,
-            ),
+            label: '',
           ),
-        ),
+        ],
+        onTap: _onTapSelectedPage,
       ),
+      body: _pages[selectedPage],
     );
   }
 }
